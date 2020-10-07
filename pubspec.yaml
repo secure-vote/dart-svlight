@@ -1,0 +1,35 @@
+name: svlight
+version: 0.0.1
+
+description: >-
+    This library provides integration functionality with the SV Light framework--a secure blockchain based voting dapp.
+
+homepage: https://github.com/secure-vote/dart-svlight
+repository: https://github.com/secure-vote/dart-svlight
+
+environment:
+    sdk: '>=2.10.0 <3.0.0'
+
+dependencies:
+    # data and type safety
+    adt:
+    # fp generally
+    dartz:
+    # logging
+    # web3
+    web3dart:
+    # ethereum_util:
+
+dev_dependencies:
+    # testing
+    test: ^1.15.4
+    # dev utilities
+    build_runner: ^1.10.3
+    # code generators
+    adt_annotation: ^0.3.0
+    web3_contract_generator:
+        path: "../dart/web3_contract_generator"
+
+executables: {}
+
+publish_to: none
