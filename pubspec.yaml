@@ -26,7 +26,8 @@ dependencies:
     http: ^0.12.2
     logging:
     path:
-    json_annotation: ^3.1.0
+    web3_contract: ^0.1.2
+    dart_json_mapper:
 
 dev_dependencies:
     # testing
@@ -36,7 +37,6 @@ dev_dependencies:
     # code generators
     adt_annotation: ^0.3.0
     web3_contract_generator: ^0.1.1
-    json_serializable: ^3.5.0
 
 executables: {}
 

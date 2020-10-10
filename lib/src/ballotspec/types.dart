@@ -1,11 +1,14 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:dart_json_mapper/dart_json_mapper.dart';
 
-@JsonSerializable()
+import 'types.mapper.g.dart' show initializeJsonMapper;
+
+@jsonSerializable
 class BallotSpecV2 {
   static const int ballotVersion = 2;
   final BallotInner ballotInner;
   final int optionsVersion;
-  final OptionsInner? optionsInner;
+  @JsonProperty(ignoreIfNull: true)
+  final OptionsInner optionsInner;
 
   const BallotSpecV2(this.ballotInner, this.optionsVersion, this.optionsInner);
 }
@@ -13,11 +16,13 @@ class BallotSpecV2 {
 abstract class OptionsInner<O, A> {
   final A aux;
   final O options;
-  abstract final int optionsVersion;
 
   const OptionsInner(this.options, this.aux);
+
+  int getOptionsVersion();
 }
 
+@jsonSerializable
 class OptionsYesNo implements OptionsInner<Null, Null> {
   @override
   get aux => null;
@@ -26,31 +31,44 @@ class OptionsYesNo implements OptionsInner<Null, Null> {
   get options => null;
 
   @override
-  int get optionsVersion => 2;
+  int getOptionsVersion() {
+    return 2;
+  }
 }
 
+@jsonSerializable
 class OptionsRange implements OptionsInner<List<RangeOpt>, Null> {
   final Null aux = null;
+  @JsonProperty(ignore: true)
   final int optionsVersion = 1;
   final List<RangeOpt> options;
 
   const OptionsRange(this.options);
+
+  @override
+  int getOptionsVersion() {
+    return optionsVersion;
+  }
 }
 
+@jsonSerializable
 class BallotInner {
   final String ballotTitle;
   final String shortDesc;
   final String longDesc;
-  final String? discussionLink;
-  final String? encryptionPK;
+  @JsonProperty(ignoreIfNull: true)
+  final String discussionLink;
+  @JsonProperty(ignoreIfNull: true)
+  final String encryptionPK;
 
   const BallotInner(this.ballotTitle, this.shortDesc, this.longDesc,
       this.discussionLink, this.encryptionPK);
 }
 
+@jsonSerializable
 class RangeOpt {
   final String optionTitle;
-  final String? optionDesc;
+  final String optionDesc;
 
   RangeOpt(this.optionTitle, this.optionDesc);
 }

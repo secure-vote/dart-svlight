@@ -1,0 +1,18 @@
+targets:
+    $default:
+        builders:
+            dart_json_mapper:
+                generate_for:
+                    - lib/main.dart
+
+            # This part is needed to tell original reflectable builder to stay away
+            # it overrides default options for reflectable builder to an **empty** set of files
+            reflectable:
+                generate_for:
+                - no/files
+
+            web3_contract_generator|web3_gen:
+                generate_for:
+                    include:
+                    - "**/*.abi"
+                    - "**/*.abi.json"
