@@ -1,11 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:path/path.dart' as p;
 import 'package:http/http.dart' as http;
 import 'package:args/args.dart';
 import 'package:crypto/crypto.dart';
 import 'package:logging/logging.dart';
 import 'package:svlight/src/ballotspec/types.dart';
+import 'package:svlight/src/svlight/data.dart';
+import 'package:svlight/svlight.dart';
+import 'package:web3_contract/web3_contract.dart';
+import 'package:web3dart/crypto.dart';
+import 'package:web3dart/web3dart.dart';
 
 const ARCHIVE_GET_URL = "https://archive.secure.vote/";
 const ARCHIVE_PUSH_URL = "https://archive.push.secure.vote/";
@@ -22,6 +28,40 @@ ArgResults parseArgs(List<String> args) {
 void main(List<String> args) async {
   var argRes = parseArgs(args);
   var nowMs = DateTime.now().millisecondsSinceEpoch;
+
+  var web3 = Web3Client(WEB3_PROVIDER, http.Client());
+  var svCoreCs = await getSvContracts(web3);
+  var svCreds = SvCredentials();
+  await svCreds.printAddrs();
+  var democHashAus = hexToBytes(DEMOC_HASHES["AUS"]);
+  print(
+      """democMgmtIsDEditor: ${await svCoreCs.backend.isDEditor(democHashAus, await svCreds.democManagement.extractAddress())}""");
+  print(
+      """publisherIsDEditor: ${await svCoreCs.backend.isDEditor(democHashAus, await svCreds.rootAdmin.extractAddress())}""");
+
+  // var democOkay = await svCoreCs.payments.getSecondsRemaining(democHashAus);
+  print("payments addr: ${svCoreCs.payments.$addr}");
+  print("backend addr: ${svCoreCs.backend.$addr}");
+  print("bbfarm addr: ${await svCoreCs.ix.getBBFarm(BigInt.from(0))}");
+
+  // return;
+
+  var bsHash = await doTestBallot(nowMs);
+  var deployTxid = await svCoreCs.ix.dDeployBallot(
+      democHashAus,
+      hexToBytes(bsHash),
+      Uint8List(32)..setRange(0, 1, [0x00]),
+      mkPacked(nowMs ~/ 1000 - 60, nowMs ~/ 1000 + 86400 * 7,
+          mkSubmissionBits(useEth: true, useNoEnc: true)),
+      svCreds.democManagement,
+      TransactionPayable(value: EtherAmount.zero()));
+  print("Deploy ballot txid: $deployTxid");
+  var txr = await waitForTxReceipt(web3, deployTxid);
+  print("txrJson: ${txrToJson(txr)}");
+  print("txr: $txr");
+}
+
+Future<String> doTestBallot(int nowMs) async {
   var bs = BallotSpecV2(
       BallotInner("test-$nowMs", "short: $nowMs", "long: $nowMs",
           discussionLink: "https://forum.voteflux.org"),
@@ -30,20 +70,7 @@ void main(List<String> args) async {
   print('Got serialized ballot spec: $bsStr');
   var bsHash = await postBallotSpecHash(bsStr);
   print("ballotSpecHash: $bsHash");
-  // postBallotSpecHash(jsonEncode({
-  //   "ballotVersion": 2,
-  //   "ballotInner": {
-  //     "ballotTitle": "test-$nowMs",
-  //     "shortDesc": "short: $nowMs",
-  //     "longDesc": "long: $nowMs",
-  //     "discussionLink": "https://voteflux.org",
-  //     "encryptionPK": null,
-  //   },
-  //   "optionsVersion": 2,
-  //   "optionsInner": {
-  //     "options": null,
-  //   },
-  // }));
+  return bsHash;
 }
 
 String calcBallotSpecHash(String ballotSpec) {

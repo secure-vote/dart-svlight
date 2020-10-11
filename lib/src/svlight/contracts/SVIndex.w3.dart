@@ -21,14 +21,14 @@ class SVIndexContract {
             EthereumAddress.fromHex(address));
 
   Future<String> dDeprecateCategory(Uint8List democHash, BigInt catId,
-      Wallet wallet, TransactionNotPayable tx) async {
+      Credentials privateKey, TransactionNotPayable tx) async {
     var _f = $contract.function('dDeprecateCategory');
     var _params = _f.encodeCall(<dynamic>[democHash, catId]);
     var finalized = tx.finalize(
         data: _params,
-        from: await wallet.privateKey.extractAddress(),
+        from: await privateKey.extractAddress(),
         to: $contract.address);
-    var txid = await $client.sendTransaction(wallet.privateKey, finalized,
+    var txid = await $client.sendTransaction(privateKey, finalized,
         fetchChainIdFromNetworkId: true);
     return txid;
   }
@@ -58,54 +58,54 @@ class SVIndexContract {
     return result[0] as EthereumAddress;
   }
 
-  Future<String> setOwner(
-      EthereumAddress newOwner, Wallet wallet, TransactionNotPayable tx) async {
+  Future<String> setOwner(EthereumAddress newOwner, Credentials privateKey,
+      TransactionNotPayable tx) async {
     var _f = $contract.function('setOwner');
     var _params = _f.encodeCall(<dynamic>[newOwner]);
     var finalized = tx.finalize(
         data: _params,
-        from: await wallet.privateKey.extractAddress(),
+        from: await privateKey.extractAddress(),
         to: $contract.address);
-    var txid = await $client.sendTransaction(wallet.privateKey, finalized,
+    var txid = await $client.sendTransaction(privateKey, finalized,
         fetchChainIdFromNetworkId: true);
     return txid;
   }
 
-  Future<String> reclaimToken(
-      EthereumAddress token, Wallet wallet, TransactionNotPayable tx) async {
+  Future<String> reclaimToken(EthereumAddress token, Credentials privateKey,
+      TransactionNotPayable tx) async {
     var _f = $contract.function('reclaimToken');
     var _params = _f.encodeCall(<dynamic>[token]);
     var finalized = tx.finalize(
         data: _params,
-        from: await wallet.privateKey.extractAddress(),
+        from: await privateKey.extractAddress(),
         to: $contract.address);
-    var txid = await $client.sendTransaction(wallet.privateKey, finalized,
+    var txid = await $client.sendTransaction(privateKey, finalized,
         fetchChainIdFromNetworkId: true);
     return txid;
   }
 
   Future<String> deprecateBBFarm(BigInt bbFarmId, EthereumAddress _bbFarm,
-      Wallet wallet, TransactionNotPayable tx) async {
+      Credentials privateKey, TransactionNotPayable tx) async {
     var _f = $contract.function('deprecateBBFarm');
     var _params = _f.encodeCall(<dynamic>[bbFarmId, _bbFarm]);
     var finalized = tx.finalize(
         data: _params,
-        from: await wallet.privateKey.extractAddress(),
+        from: await privateKey.extractAddress(),
         to: $contract.address);
-    var txid = await $client.sendTransaction(wallet.privateKey, finalized,
+    var txid = await $client.sendTransaction(privateKey, finalized,
         fetchChainIdFromNetworkId: true);
     return txid;
   }
 
   Future<String> dSetCommunityBallotsEnabled(Uint8List democHash, bool enabled,
-      Wallet wallet, TransactionNotPayable tx) async {
+      Credentials privateKey, TransactionNotPayable tx) async {
     var _f = $contract.function('dSetCommunityBallotsEnabled');
     var _params = _f.encodeCall(<dynamic>[democHash, enabled]);
     var finalized = tx.finalize(
         data: _params,
-        from: await wallet.privateKey.extractAddress(),
+        from: await privateKey.extractAddress(),
         to: $contract.address);
-    var txid = await $client.sendTransaction(wallet.privateKey, finalized,
+    var txid = await $client.sendTransaction(privateKey, finalized,
         fetchChainIdFromNetworkId: true);
     return txid;
   }
@@ -115,16 +115,16 @@ class SVIndexContract {
       Uint8List catName,
       bool hasParent,
       BigInt parent,
-      Wallet wallet,
+      Credentials privateKey,
       TransactionNotPayable tx) async {
     var _f = $contract.function('dAddCategory');
     var _params =
         _f.encodeCall(<dynamic>[democHash, catName, hasParent, parent]);
     var finalized = tx.finalize(
         data: _params,
-        from: await wallet.privateKey.extractAddress(),
+        from: await privateKey.extractAddress(),
         to: $contract.address);
-    var txid = await $client.sendTransaction(wallet.privateKey, finalized,
+    var txid = await $client.sendTransaction(privateKey, finalized,
         fetchChainIdFromNetworkId: true);
     return txid;
   }
@@ -134,67 +134,68 @@ class SVIndexContract {
       Uint8List specHash,
       Uint8List extraData,
       BigInt packed,
-      Wallet wallet,
+      Credentials privateKey,
       TransactionPayable tx) async {
     var _f = $contract.function('dDeployBallot');
     var _params =
         _f.encodeCall(<dynamic>[democHash, specHash, extraData, packed]);
     var finalized = tx.finalize(
         data: _params,
-        from: await wallet.privateKey.extractAddress(),
+        from: await privateKey.extractAddress(),
         to: $contract.address);
-    var txid = await $client.sendTransaction(wallet.privateKey, finalized,
+    var txid = await $client.sendTransaction(privateKey, finalized,
         fetchChainIdFromNetworkId: true);
     return txid;
   }
 
-  Future<String> doUpgrade(
-      EthereumAddress nextSC, Wallet wallet, TransactionNotPayable tx) async {
+  Future<String> doUpgrade(EthereumAddress nextSC, Credentials privateKey,
+      TransactionNotPayable tx) async {
     var _f = $contract.function('doUpgrade');
     var _params = _f.encodeCall(<dynamic>[nextSC]);
     var finalized = tx.finalize(
         data: _params,
-        from: await wallet.privateKey.extractAddress(),
+        from: await privateKey.extractAddress(),
         to: $contract.address);
-    var txid = await $client.sendTransaction(wallet.privateKey, finalized,
+    var txid = await $client.sendTransaction(privateKey, finalized,
         fetchChainIdFromNetworkId: true);
     return txid;
   }
 
-  Future<String> setDNoEditors(
-      Uint8List democHash, Wallet wallet, TransactionNotPayable tx) async {
+  Future<String> setDNoEditors(Uint8List democHash, Credentials privateKey,
+      TransactionNotPayable tx) async {
     var _f = $contract.function('setDNoEditors');
     var _params = _f.encodeCall(<dynamic>[democHash]);
     var finalized = tx.finalize(
         data: _params,
-        from: await wallet.privateKey.extractAddress(),
+        from: await privateKey.extractAddress(),
         to: $contract.address);
-    var txid = await $client.sendTransaction(wallet.privateKey, finalized,
+    var txid = await $client.sendTransaction(privateKey, finalized,
         fetchChainIdFromNetworkId: true);
     return txid;
   }
 
-  Future<String> payoutAll(Wallet wallet, TransactionNotPayable tx) async {
+  Future<String> payoutAll(
+      Credentials privateKey, TransactionNotPayable tx) async {
     var _f = $contract.function('payoutAll');
     var _params = _f.encodeCall(<dynamic>[]);
     var finalized = tx.finalize(
         data: _params,
-        from: await wallet.privateKey.extractAddress(),
+        from: await privateKey.extractAddress(),
         to: $contract.address);
-    var txid = await $client.sendTransaction(wallet.privateKey, finalized,
+    var txid = await $client.sendTransaction(privateKey, finalized,
         fetchChainIdFromNetworkId: true);
     return txid;
   }
 
-  Future<String> addBBFarm(
-      EthereumAddress bbFarm, Wallet wallet, TransactionNotPayable tx) async {
+  Future<String> addBBFarm(EthereumAddress bbFarm, Credentials privateKey,
+      TransactionNotPayable tx) async {
     var _f = $contract.function('addBBFarm');
     var _params = _f.encodeCall(<dynamic>[bbFarm]);
     var finalized = tx.finalize(
         data: _params,
-        from: await wallet.privateKey.extractAddress(),
+        from: await privateKey.extractAddress(),
         to: $contract.address);
-    var txid = await $client.sendTransaction(wallet.privateKey, finalized,
+    var txid = await $client.sendTransaction(privateKey, finalized,
         fetchChainIdFromNetworkId: true);
     return txid;
   }
@@ -223,15 +224,15 @@ class SVIndexContract {
     return result[0] as EthereumAddress;
   }
 
-  Future<String> dDisableErc20OwnerClaim(
-      Uint8List democHash, Wallet wallet, TransactionNotPayable tx) async {
+  Future<String> dDisableErc20OwnerClaim(Uint8List democHash,
+      Credentials privateKey, TransactionNotPayable tx) async {
     var _f = $contract.function('dDisableErc20OwnerClaim');
     var _params = _f.encodeCall(<dynamic>[democHash]);
     var finalized = tx.finalize(
         data: _params,
-        from: await wallet.privateKey.extractAddress(),
+        from: await privateKey.extractAddress(),
         to: $contract.address);
-    var txid = await $client.sendTransaction(wallet.privateKey, finalized,
+    var txid = await $client.sendTransaction(privateKey, finalized,
         fetchChainIdFromNetworkId: true);
     return txid;
   }
@@ -248,54 +249,54 @@ class SVIndexContract {
     return result[0] as EthereumAddress;
   }
 
-  Future<String> dDowngradeToBasic(
-      Uint8List democHash, Wallet wallet, TransactionNotPayable tx) async {
+  Future<String> dDowngradeToBasic(Uint8List democHash, Credentials privateKey,
+      TransactionNotPayable tx) async {
     var _f = $contract.function('dDowngradeToBasic');
     var _params = _f.encodeCall(<dynamic>[democHash]);
     var finalized = tx.finalize(
         data: _params,
-        from: await wallet.privateKey.extractAddress(),
+        from: await privateKey.extractAddress(),
         to: $contract.address);
-    var txid = await $client.sendTransaction(wallet.privateKey, finalized,
+    var txid = await $client.sendTransaction(privateKey, finalized,
         fetchChainIdFromNetworkId: true);
     return txid;
   }
 
   Future<String> dSetArbitraryData(Uint8List democHash, Uint8List key,
-      Uint8List value, Wallet wallet, TransactionNotPayable tx) async {
+      Uint8List value, Credentials privateKey, TransactionNotPayable tx) async {
     var _f = $contract.function('dSetArbitraryData');
     var _params = _f.encodeCall(<dynamic>[democHash, key, value]);
     var finalized = tx.finalize(
         data: _params,
-        from: await wallet.privateKey.extractAddress(),
+        from: await privateKey.extractAddress(),
         to: $contract.address);
-    var txid = await $client.sendTransaction(wallet.privateKey, finalized,
+    var txid = await $client.sendTransaction(privateKey, finalized,
         fetchChainIdFromNetworkId: true);
     return txid;
   }
 
-  Future<String> dOwnerErc20Claim(
-      Uint8List democHash, Wallet wallet, TransactionNotPayable tx) async {
+  Future<String> dOwnerErc20Claim(Uint8List democHash, Credentials privateKey,
+      TransactionNotPayable tx) async {
     var _f = $contract.function('dOwnerErc20Claim');
     var _params = _f.encodeCall(<dynamic>[democHash]);
     var finalized = tx.finalize(
         data: _params,
-        from: await wallet.privateKey.extractAddress(),
+        from: await privateKey.extractAddress(),
         to: $contract.address);
-    var txid = await $client.sendTransaction(wallet.privateKey, finalized,
+    var txid = await $client.sendTransaction(privateKey, finalized,
         fetchChainIdFromNetworkId: true);
     return txid;
   }
 
   Future<String> setABackend(Uint8List toSet, EthereumAddress newSC,
-      Wallet wallet, TransactionNotPayable tx) async {
+      Credentials privateKey, TransactionNotPayable tx) async {
     var _f = $contract.function('setABackend');
     var _params = _f.encodeCall(<dynamic>[toSet, newSC]);
     var finalized = tx.finalize(
         data: _params,
-        from: await wallet.privateKey.extractAddress(),
+        from: await privateKey.extractAddress(),
         to: $contract.address);
-    var txid = await $client.sendTransaction(wallet.privateKey, finalized,
+    var txid = await $client.sendTransaction(privateKey, finalized,
         fetchChainIdFromNetworkId: true);
     return txid;
   }
@@ -317,16 +318,16 @@ class SVIndexContract {
       Uint8List specHash,
       Uint8List extraData,
       BigInt packedTimes,
-      Wallet wallet,
+      Credentials privateKey,
       TransactionPayable tx) async {
     var _f = $contract.function('dDeployCommunityBallot');
     var _params =
         _f.encodeCall(<dynamic>[democHash, specHash, extraData, packedTimes]);
     var finalized = tx.finalize(
         data: _params,
-        from: await wallet.privateKey.extractAddress(),
+        from: await privateKey.extractAddress(),
         to: $contract.address);
-    var txid = await $client.sendTransaction(wallet.privateKey, finalized,
+    var txid = await $client.sendTransaction(privateKey, finalized,
         fetchChainIdFromNetworkId: true);
     return txid;
   }
@@ -357,54 +358,57 @@ class SVIndexContract {
   }
 
   Future<String> setDOwner(Uint8List democHash, EthereumAddress newOwner,
-      Wallet wallet, TransactionNotPayable tx) async {
+      Credentials privateKey, TransactionNotPayable tx) async {
     var _f = $contract.function('setDOwner');
     var _params = _f.encodeCall(<dynamic>[democHash, newOwner]);
     var finalized = tx.finalize(
         data: _params,
-        from: await wallet.privateKey.extractAddress(),
+        from: await privateKey.extractAddress(),
         to: $contract.address);
-    var txid = await $client.sendTransaction(wallet.privateKey, finalized,
+    var txid = await $client.sendTransaction(privateKey, finalized,
         fetchChainIdFromNetworkId: true);
     return txid;
   }
 
   Future<String> dAddBallot(Uint8List democHash, BigInt ballotId, BigInt packed,
-      Wallet wallet, TransactionNotPayable tx) async {
+      Credentials privateKey, TransactionNotPayable tx) async {
     var _f = $contract.function('dAddBallot');
     var _params = _f.encodeCall(<dynamic>[democHash, ballotId, packed]);
     var finalized = tx.finalize(
         data: _params,
-        from: await wallet.privateKey.extractAddress(),
+        from: await privateKey.extractAddress(),
         to: $contract.address);
-    var txid = await $client.sendTransaction(wallet.privateKey, finalized,
+    var txid = await $client.sendTransaction(privateKey, finalized,
         fetchChainIdFromNetworkId: true);
     return txid;
   }
 
-  Future<String> dUpgradeToPremium(
-      Uint8List democHash, Wallet wallet, TransactionNotPayable tx) async {
+  Future<String> dUpgradeToPremium(Uint8List democHash, Credentials privateKey,
+      TransactionNotPayable tx) async {
     var _f = $contract.function('dUpgradeToPremium');
     var _params = _f.encodeCall(<dynamic>[democHash]);
     var finalized = tx.finalize(
         data: _params,
-        from: await wallet.privateKey.extractAddress(),
+        from: await privateKey.extractAddress(),
         to: $contract.address);
-    var txid = await $client.sendTransaction(wallet.privateKey, finalized,
+    var txid = await $client.sendTransaction(privateKey, finalized,
         fetchChainIdFromNetworkId: true);
     return txid;
   }
 
-  Future<String> dInit(EthereumAddress defaultErc20,
-      bool disableErc20OwnerClaim, Wallet wallet, TransactionPayable tx) async {
+  Future<String> dInit(
+      EthereumAddress defaultErc20,
+      bool disableErc20OwnerClaim,
+      Credentials privateKey,
+      TransactionPayable tx) async {
     var _f = $contract.function('dInit');
     var _params =
         _f.encodeCall(<dynamic>[defaultErc20, disableErc20OwnerClaim]);
     var finalized = tx.finalize(
         data: _params,
-        from: await wallet.privateKey.extractAddress(),
+        from: await privateKey.extractAddress(),
         to: $contract.address);
-    var txid = await $client.sendTransaction(wallet.privateKey, finalized,
+    var txid = await $client.sendTransaction(privateKey, finalized,
         fetchChainIdFromNetworkId: true);
     return txid;
   }
@@ -422,27 +426,27 @@ class SVIndexContract {
   }
 
   Future<String> setDErc20(Uint8List democHash, EthereumAddress newErc20,
-      Wallet wallet, TransactionNotPayable tx) async {
+      Credentials privateKey, TransactionNotPayable tx) async {
     var _f = $contract.function('setDErc20');
     var _params = _f.encodeCall(<dynamic>[democHash, newErc20]);
     var finalized = tx.finalize(
         data: _params,
-        from: await wallet.privateKey.extractAddress(),
+        from: await privateKey.extractAddress(),
         to: $contract.address);
-    var txid = await $client.sendTransaction(wallet.privateKey, finalized,
+    var txid = await $client.sendTransaction(privateKey, finalized,
         fetchChainIdFromNetworkId: true);
     return txid;
   }
 
   Future<String> setDEditor(Uint8List democHash, EthereumAddress editor,
-      bool canEdit, Wallet wallet, TransactionNotPayable tx) async {
+      bool canEdit, Credentials privateKey, TransactionNotPayable tx) async {
     var _f = $contract.function('setDEditor');
     var _params = _f.encodeCall(<dynamic>[democHash, editor, canEdit]);
     var finalized = tx.finalize(
         data: _params,
-        from: await wallet.privateKey.extractAddress(),
+        from: await privateKey.extractAddress(),
         to: $contract.address);
-    var txid = await $client.sendTransaction(wallet.privateKey, finalized,
+    var txid = await $client.sendTransaction(privateKey, finalized,
         fetchChainIdFromNetworkId: true);
     return txid;
   }
@@ -453,16 +457,16 @@ class SVIndexContract {
       EthereumAddress _ensOwnerPx,
       EthereumAddress _bbFarm0,
       EthereumAddress _commAuction,
-      Wallet wallet,
+      Credentials privateKey,
       TransactionNotPayable tx) async {
     var _f = $abi.functions.where((f) => f.name == '' && f.isConstructor).first;
     var _params =
         _f.encodeCall(<dynamic>[_b, _pay, _ensOwnerPx, _bbFarm0, _commAuction]);
     var finalized = tx.finalize(
         data: _params,
-        from: await wallet.privateKey.extractAddress(),
+        from: await privateKey.extractAddress(),
         to: $contract.address);
-    var txid = await $client.sendTransaction(wallet.privateKey, finalized,
+    var txid = await $client.sendTransaction(privateKey, finalized,
         fetchChainIdFromNetworkId: true);
     return txid;
   }

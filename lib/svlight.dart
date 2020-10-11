@@ -26,7 +26,13 @@ Map<String, Uint8List> DEMOC_HASHES_BYTES = DEMOC_HASHES.map(
     (key, value) => MapEntry(key, hexToBytes(value))); // <String, Uint8List>
 
 class SvLightCredentialsError implements Exception {
-  SvLightCredentialsError([String s]) {}
+  String msg;
+  SvLightCredentialsError([String this.msg]) : super();
+
+  @override
+  String toString() {
+    return "${runtimeType.toString()} <msg: $msg>";
+  }
 }
 
 class SvCoreContracts {
@@ -37,19 +43,25 @@ class SvCoreContracts {
 }
 
 class SvCredentials {
-  EthPrivateKey publish;
+  EthPrivateKey rootAdmin;
+  EthPrivateKey democManagement;
+
   SvCredentials() {
     var homeDir =
         Platform.environment['HOME'] ?? Platform.environment['USERPROFILE'];
     var credsPath = p.joinAll([homeDir, '.svlight', 'credentials']);
-    var credsYaml =
-        loadYaml(File(credsPath).readAsStringSync()) as Map<String, dynamic>;
+    YamlMap credsYaml = loadYaml(File(credsPath).readAsStringSync()) as YamlMap;
     if (!credsYaml.containsKey('publish')) {
       throw SvLightCredentialsError(
           'The key `publish` is missing from ~/.svlight/credentials file.');
     }
-    var privateKey = hexToBytes(credsYaml['publish'] as String);
-    publish = EthPrivateKey(privateKey);
+    rootAdmin = EthPrivateKey(hexToBytes(credsYaml['publish'] as String));
+    democManagement = EthPrivateKey(hexToBytes(credsYaml['members'] as String));
+  }
+
+  void printAddrs() async {
+    print('democManagementAddr: ${await democManagement.extractAddress()}');
+    print('rootAdminAddr: ${await rootAdmin.extractAddress()}');
   }
 }
 
