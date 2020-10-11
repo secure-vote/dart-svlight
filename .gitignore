@@ -2,3 +2,5 @@
 doc/api
 .dart_tool
 pubspec.lock
+*.mapper.g.dart
+*.g.dart

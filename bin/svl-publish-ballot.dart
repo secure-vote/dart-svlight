@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:args/args.dart';
 import 'package:crypto/crypto.dart';
 import 'package:logging/logging.dart';
+import 'package:svlight/src/ballotspec/types.dart';
 
 const ARCHIVE_GET_URL = "https://archive.secure.vote/";
 const ARCHIVE_PUSH_URL = "https://archive.push.secure.vote/";
@@ -18,23 +19,31 @@ ArgResults parseArgs(List<String> args) {
   return parser.parse(args);
 }
 
-void main(List<String> args) {
+void main(List<String> args) async {
   var argRes = parseArgs(args);
   var nowMs = DateTime.now().millisecondsSinceEpoch;
-  postBallotSpecHash(jsonEncode({
-    "ballotVersion": 2,
-    "ballotInner": {
-      "ballotTitle": "test-$nowMs",
-      "shortDesc": "short: $nowMs",
-      "longDesc": "long: $nowMs",
-      "discussionLink": "https://voteflux.org",
-      "encryptionPK": null,
-    },
-    "optionsVersion": 2,
-    "optionsInner": {
-      "options": null,
-    },
-  }));
+  var bs = BallotSpecV2(
+      BallotInner("test-$nowMs", "short: $nowMs", "long: $nowMs",
+          discussionLink: "https://forum.voteflux.org"),
+      OptionsYesNoInner());
+  var bsStr = jsonEncode(bs);
+  print('Got serialized ballot spec: $bsStr');
+  var bsHash = await postBallotSpecHash(bsStr);
+  print("ballotSpecHash: $bsHash");
+  // postBallotSpecHash(jsonEncode({
+  //   "ballotVersion": 2,
+  //   "ballotInner": {
+  //     "ballotTitle": "test-$nowMs",
+  //     "shortDesc": "short: $nowMs",
+  //     "longDesc": "long: $nowMs",
+  //     "discussionLink": "https://voteflux.org",
+  //     "encryptionPK": null,
+  //   },
+  //   "optionsVersion": 2,
+  //   "optionsInner": {
+  //     "options": null,
+  //   },
+  // }));
 }
 
 String calcBallotSpecHash(String ballotSpec) {
