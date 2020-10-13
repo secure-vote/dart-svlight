@@ -1,7 +1,8 @@
 Function RunMyStuff {
     # this is the bit we want to happen when the file changes
     Clear-Host # remove previous console output
-    pub run test
+    #pub run test
+    flutter test
 }
 
 Function Watch {

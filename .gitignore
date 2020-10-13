@@ -4,3 +4,4 @@ doc/api
 pubspec.lock
 *.mapper.g.dart
 *.g.dart
+build/*

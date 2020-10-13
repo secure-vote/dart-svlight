@@ -1,17 +1,20 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:dartz/dartz.dart';
-import 'package:path/path.dart' as p;
 import 'package:http/http.dart';
-import 'package:svlight/src/ballotspec/types.dart';
-import 'package:svlight/src/svlight/contracts/SVIndex.w3.dart';
-import 'package:svlight/src/svlight/contracts/SVIndexBackend.w3.dart';
-import 'package:svlight/src/svlight/contracts/SVPayments.w3.dart';
+import 'package:path/path.dart' as p;
 import 'package:web3dart/crypto.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:yaml/yaml.dart';
+
+import 'package:svlight/src/svlight/contracts/SVIndex.w3.dart';
+import 'package:svlight/src/svlight/contracts/SVIndexBackend.w3.dart';
+import 'package:svlight/src/svlight/contracts/SVPayments.w3.dart';
+
+export 'src/dartea/dartea.dart';
+export 'src/svlight/model.dart';
+export 'src/svlight/msg.dart';
+export 'src/svlight/update.dart';
 
 const WEB3_PROVIDER = "http://3.24.234.52:8545";
 const SV_INDEX_ADDR = "0x813552517e36b4D8c5e8c7CA8c184Af5c314ecf2";
@@ -74,17 +77,12 @@ Future<SvCoreContracts> getSvContracts(Web3Client web3) async {
   return SvCoreContracts(ix, await backendFut, await paymentsFut);
 }
 
-Future publishBallotSpec(
-  Web3Client web3,
-  BallotSpecV2 ballotSpec,
-) async {
-  var bsEncoded = jsonEncode(ballotSpec);
-  print('bsEncoded: $bsEncoded');
-}
+Web3Client mkWeb3Client() =>
+    Web3Client(WEB3_PROVIDER, Client(), enableBackgroundIsolate: true);
 
 void main() async {
   var democHash = hexToBytes(DEMOC_HASHES["AUS"]);
-  var web3 = Web3Client(WEB3_PROVIDER, Client(), enableBackgroundIsolate: true);
+  var web3 = mkWeb3Client();
   var coreContracts = await getSvContracts(web3);
   // var ix = coreContracts.value1;
   var backend = coreContracts.backend;
@@ -93,5 +91,6 @@ void main() async {
   var ballotSpecHashes = await Future.wait(
       Iterable<int>.generate(nBallots.toInt())
           .map((int i) => backend.getDBallotID(democHash, BigInt.from(i))));
-  print('ballotSpecHashes: $ballotSpecHashes');
+  print(
+      'ballotSpecHashes: ${ballotSpecHashes.map((e) => e.toRadixString(16))}');
 }

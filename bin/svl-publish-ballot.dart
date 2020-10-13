@@ -47,18 +47,31 @@ void main(List<String> args) async {
   // return;
 
   var bsHash = await doTestBallot(nowMs);
-  var deployTxid = await svCoreCs.ix.dDeployBallot(
-      democHashAus,
-      hexToBytes(bsHash),
-      Uint8List(32)..setRange(0, 1, [0x00]),
-      mkPacked(nowMs ~/ 1000 - 60, nowMs ~/ 1000 + 86400 * 7,
-          mkSubmissionBits(useEth: true, useNoEnc: true)),
-      svCreds.democManagement,
-      TransactionPayable(value: EtherAmount.zero()));
-  print("Deploy ballot txid: $deployTxid");
-  var txr = await waitForTxReceipt(web3, deployTxid);
+  var txr = await deployBallot(web3, svCoreCs, svCreds, democHashAus, bsHash,
+      nowMs ~/ 1000 - 60, nowMs ~/ 1000 + 86400 * 7);
   print("txrJson: ${txrToJson(txr)}");
   print("txr: $txr");
+}
+
+Future<TransactionReceipt> deployBallot(
+    Web3Client web3,
+    SvCoreContracts svCoreCs,
+    SvCredentials svCreds,
+    Uint8List democHash,
+    String bsHash,
+    int startTime,
+    int endTime) async {
+  var deployTxid = await svCoreCs.ix.dDeployBallot(
+      democHash,
+      hexToBytes(bsHash),
+      Uint8List(32)..setRange(0, 1, [0x00]),
+      mkPacked(
+          startTime, endTime, mkSubmissionBits(useEth: true, useNoEnc: true)),
+      svCreds.democManagement,
+      TransactionPayable(value: EtherAmount.zero()));
+  log.info("Deploy ballot txid: $deployTxid");
+  var txr = await waitForTxReceipt(web3, deployTxid);
+  return txr;
 }
 
 Future<String> doTestBallot(int nowMs) async {

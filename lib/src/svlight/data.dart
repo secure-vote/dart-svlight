@@ -62,14 +62,3 @@ Map<String, dynamic> txrToJson(TransactionReceipt txr) {
     'transactionIndex': txr.transactionIndex,
   };
 }
-
-Future<String> getRevertReason(Web3Client web3, String txid) async {
-  var tx = await web3.getTransactionByHash(txid);
-  var rawCallRes = await web3.callRaw(
-      contract: tx.to,
-      data: tx.input,
-      sender: tx.from,
-      atBlock: tx.blockNumber);
-  print(rawCallRes);
-  return rawCallRes;
-}
